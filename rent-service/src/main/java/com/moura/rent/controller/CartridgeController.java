@@ -1,12 +1,15 @@
 package com.moura.rent.controller;
 
-import com.moura.rent.entity.Cartridge;
+import com.moura.rent.config.validation.ErrorResponse;
+import com.moura.rent.model.entity.Cartridge;
 import com.moura.rent.service.CartridgeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/cartridges")
@@ -16,7 +19,7 @@ public class CartridgeController {
     private CartridgeService cartridgeService;
 
     @PostMapping("/")
-    public ResponseEntity<Cartridge> create(@RequestBody Cartridge cartridge){
+    public ResponseEntity<Object> create(@RequestBody @Valid Cartridge cartridge){
         log.info("Inside CREATE method of CartridgeController");
 
         try {
@@ -25,12 +28,13 @@ public class CartridgeController {
             return new ResponseEntity<>(newCartridge, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            ErrorResponse error = new ErrorResponse("DATABASE_ERROR", e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cartridge> retrieve(@PathVariable("id") Long cartridgeId){
+    public ResponseEntity<Object> retrieve(@PathVariable("id") Long cartridgeId){
         log.info("Inside RETRIEVE method of CartridgeController");
 
         try {

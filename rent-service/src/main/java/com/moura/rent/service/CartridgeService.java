@@ -1,7 +1,7 @@
 package com.moura.rent.service;
 
-import com.moura.rent.entity.Cartridge;
-import com.moura.rent.repository.CartridgeRepository;
+import com.moura.rent.model.entity.Cartridge;
+import com.moura.rent.model.repository.CartridgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

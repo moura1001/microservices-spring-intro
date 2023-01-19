@@ -1,6 +1,6 @@
-package com.moura.rent.repository;
+package com.moura.rent.model.repository;
 
-import com.moura.rent.entity.Cartridge;
+import com.moura.rent.model.entity.Cartridge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
