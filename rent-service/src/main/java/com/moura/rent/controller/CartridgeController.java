@@ -1,6 +1,7 @@
 package com.moura.rent.controller;
 
-import com.moura.rent.config.validation.ErrorResponse;
+import com.moura.rent.model.dto.CartridgeResponseDTO;
+import com.moura.rent.model.dto.ErrorResponseDTO;
 import com.moura.rent.model.entity.Cartridge;
 import com.moura.rent.service.CartridgeService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cartridges")
@@ -28,19 +30,22 @@ public class CartridgeController {
             return new ResponseEntity<>(newCartridge, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            ErrorResponse error = new ErrorResponse("DATABASE_ERROR", e.getMessage());
+            ErrorResponseDTO error = new ErrorResponseDTO();
+            error.setCode("InternalServerError");
+            error.setMessage(e.getMessage());
+            error.setRejectedValue(cartridge);
             return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> retrieve(@PathVariable("id") Long cartridgeId){
+    public ResponseEntity<Object> retrieve(@PathVariable("id") Long gameId){
         log.info("Inside RETRIEVE method of CartridgeController");
 
         try {
 
-            Cartridge cartridge = cartridgeService.findCartridgeById(cartridgeId);
-            return new ResponseEntity<>(cartridge, HttpStatus.OK);
+            CartridgeResponseDTO cartridges = cartridgeService.getCartridgesWithGame(gameId);
+            return new ResponseEntity<>(cartridges, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

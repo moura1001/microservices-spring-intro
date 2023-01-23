@@ -1,4 +1,4 @@
-package com.moura.rent.config.validation;
+package com.moura.rent.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponse {
-    private String title, details;
+public class ErrorResponseDTO {
+    private String code, message, field;
+    private Object rejectedValue;
 }
