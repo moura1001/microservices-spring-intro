@@ -34,7 +34,7 @@ public class CartridgeService {
         CartridgeResponseDTO dto = new CartridgeResponseDTO();
         List<Cartridge> cartridges = cartridgeRepository.findAllByGameId(gameId).get();
 
-        GameVO game = restTemplate.getForObject("http://localhost:8002/games/" + gameId, GameVO.class);
+        GameVO game = restTemplate.getForObject("http://RETRO-SERVICE/games/" + gameId, GameVO.class);
 
         if(!cartridges.isEmpty() && game != null){
             dto.setCartridges(cartridges);
