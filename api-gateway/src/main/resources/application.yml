@@ -1,0 +1,26 @@
+server:
+  port: 8181
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: RENT-SERVICE
+          uri: lb://RENT-SERVICE
+          predicates:
+            - Path=/cartridges/**
+        - id: RETRO-SERVICE
+          uri: lb://RETRO-SERVICE
+          predicates:
+            - Path=/games/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
