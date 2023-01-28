@@ -11,10 +11,53 @@ spring:
           uri: lb://RENT-SERVICE
           predicates:
             - Path=/cartridges/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: RENT-SERVICE
+                fallbackuri: forward:/rentServiceFallBack
         - id: RETRO-SERVICE
           uri: lb://RETRO-SERVICE
           predicates:
             - Path=/games/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: RETRO-SERVICE
+                fallbackuri: forward:/retroServiceFallBack
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 5
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 60
+      eventConsumerBufferSize: 10
+      registerHealthIndicator: true
+      record-exceptions:
+        - java.lang.Exception
+  instances:
+    RENT-SERVICE:
+      baseConfig: default
+      waitDurationInOpenState: 4000
+    RETRO-SERVICE:
+      baseConfig: default
+      waitDurationInOpenState: 4000
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
 
 eureka:
   client:
