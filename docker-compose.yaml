@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  service-registry:
+    build: ./service-registry
+    container_name: spring-service-registry
+    ports:
+      - "8761:8761"
+  api-gateway:
+    build: ./api-gateway
+    container_name: spring-api-gateway
+    ports:
+      - "8181:8181"
+    links:
+      - service-registry
+    depends_on: 
+      - service-registry
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    container_name: prometheus-server
+    volumes:
+      - ./monitoring/prometheus/config:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana-dashboard
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
