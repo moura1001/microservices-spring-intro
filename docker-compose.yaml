@@ -6,6 +6,13 @@ services:
     container_name: spring-service-registry
     ports:
       - "8761:8761"
+  config-server:
+    build: ./config-server
+    container_name: spring-config-server
+    expose:
+      - "8282"
+    links:
+      - service-registry
   api-gateway:
     build: ./api-gateway
     container_name: spring-api-gateway
@@ -13,8 +20,7 @@ services:
       - "8181:8181"
     links:
       - service-registry
-    depends_on: 
-      - service-registry
+      - config-server
   prometheus:
     image: prom/prometheus:v2.35.0
     container_name: prometheus-server

@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: API-GATEWAY
+  config:
+    import: "optional:configserver:http://config-server:8282"
   cloud:
     gateway:
       routes:
@@ -60,12 +62,3 @@ management:
   endpoint:
     health:
       show-details: always
-
-eureka:
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
-      defaultZone: http://service-registry:8761/eureka/
-  instance:
-    preferIpAddress: true
