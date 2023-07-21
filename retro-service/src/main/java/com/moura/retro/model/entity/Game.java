@@ -26,7 +26,7 @@ public class Game {
     @ElementCollection(targetClass = GameGenre.class)
     @CollectionTable(name = "game_genre", joinColumns = @JoinColumn(name = "game_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "skill_name", nullable = false)
+    @Column(name = "genre_name", nullable = false)
     @NotEmpty @Valid
     private Set<GameGenre> genreSet;
 

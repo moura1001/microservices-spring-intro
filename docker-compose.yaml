@@ -9,6 +9,9 @@ services:
   config-server:
     build: ./config-server
     container_name: spring-config-server
+    entrypoint: ["/opt/docker-scripts/wait-for-service-registry.sh"]
+    volumes:
+      - ./docker-scripts:/opt/docker-scripts
     expose:
       - "8282"
     links:
@@ -16,8 +19,39 @@ services:
   api-gateway:
     build: ./api-gateway
     container_name: spring-api-gateway
+    environment:
+      - RETRIES=10
+    entrypoint: ["/opt/docker-scripts/wait-for-config-server.sh"]
+    volumes:
+      - ./docker-scripts:/opt/docker-scripts
     ports:
       - "8181:8181"
+    links:
+      - service-registry
+      - config-server
+  rent-service:
+    build: ./rent-service
+    container_name: spring-rent-service
+    environment:
+      - RETRIES=10
+    entrypoint: ["/opt/docker-scripts/wait-for-config-server.sh"]
+    volumes:
+      - ./docker-scripts:/opt/docker-scripts
+    expose:
+      - "8001"
+    links:
+      - service-registry
+      - config-server
+  retro-service:
+    build: ./retro-service
+    container_name: spring-retro-service
+    environment:
+      - RETRIES=10
+    entrypoint: ["/opt/docker-scripts/wait-for-config-server.sh"]
+    volumes:
+      - ./docker-scripts:/opt/docker-scripts
+    expose:
+      - "8002"
     links:
       - service-registry
       - config-server
@@ -41,3 +75,4 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+

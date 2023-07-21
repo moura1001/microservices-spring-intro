@@ -8,6 +8,16 @@ spring:
     import: "optional:configserver:http://config-server:8282"
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+            allowedHeaders: "*"
       routes:
         - id: RENT-SERVICE
           uri: lb://RENT-SERVICE
